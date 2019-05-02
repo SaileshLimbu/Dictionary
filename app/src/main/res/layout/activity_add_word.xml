@@ -49,11 +49,12 @@
             <EditText
                 android:id="@+id/etMeaning"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="80dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/drawable_edittext"
                 android:hint="Enter Meaning"
-                android:paddingLeft="8dp"
+                android:gravity="top"
+                android:padding="8dp"
                 android:textSize="15sp" />
 
             <Button
