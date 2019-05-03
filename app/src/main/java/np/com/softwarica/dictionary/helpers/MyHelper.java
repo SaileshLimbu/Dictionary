@@ -54,4 +54,30 @@ public class MyHelper extends SQLiteOpenHelper {
         }
         return listWords;
     }
+
+    public ArrayList<Word> searchByWord(String word) {
+        ArrayList<Word> listWords = new ArrayList<>();
+        Cursor cursor = this.getReadableDatabase().rawQuery("SELECT * FROM " + TABLE_NAME + " where word=?", new String[]{word});
+
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                Word wd = new Word(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+                listWords.add(wd);
+            }
+        }
+        return listWords;
+    }
+
+    public boolean deleteWord(String id) {
+        int row = this.getWritableDatabase().delete(TABLE_NAME, "id=?", new String[]{id});
+        return row > 0 ? true : false;
+    }
+
+    public boolean editWord(Word word) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("word", word.getWord());
+        contentValues.put("meaning", word.getMeaning());
+        int row = this.getWritableDatabase().update(TABLE_NAME, contentValues, "id=?", new String[]{Integer.toString(word.getId())});
+        return row > 0 ? true : false;
+    }
 }

@@ -1,13 +1,12 @@
 package np.com.softwarica.dictionary.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -23,6 +22,9 @@ public class DictionaryActivity extends AppCompatActivity implements View.OnClic
     private ListView listView;
     private ArrayList<Word> listWords;
     private MyHelper helper;
+    private EditText etSearchText;
+    private Button btnSearch;
+    private DictionaryAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +33,31 @@ public class DictionaryActivity extends AppCompatActivity implements View.OnClic
 
         fab = findViewById(R.id.fab);
         listView = findViewById(R.id.listView);
+        etSearchText = findViewById(R.id.etSearchText);
+        btnSearch = findViewById(R.id.btnSearch);
 
         helper = new MyHelper(this);
         listWords = helper.getAllWord();
 
-        DictionaryAdapter adapter = new DictionaryAdapter(this, listWords);
+        adapter = new DictionaryAdapter(this, listWords);
         listView.setAdapter(adapter);
 
         fab.setOnClickListener(this);
+        btnSearch.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(this, AddWordActivity.class));
+        if (v.getId() == R.id.fab) {
+            startActivity(new Intent(this, AddWordActivity.class));
+        } else {
+            adapter.replaceDataSet(helper.searchByWord(etSearchText.getText().toString()));
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.replaceDataSet(helper.getAllWord());
     }
 }
